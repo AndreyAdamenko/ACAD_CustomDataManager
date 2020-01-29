@@ -12,21 +12,27 @@ namespace ACAD_CustomDataManager
 {
     public class CustomDataManager
     {
-        private XRecordManager XMan;
+        const string companyName = "KITNG";
 
-        //private bool isInitialized = false;
+        const string applicationName = "CustomDataManager";
+
+        internal static XRecordManager XMan;
 
         public static string settingsFileName = "CustomDataManager_settings.xml";
 
-        private string localAppDataPath;
+        //internal static string localAppDataPath;
 
-        private Settings settings;
+        internal static Settings settings;
+
+        public LocalOperator Local;
+
+        public PublicOperator Public;
+
+        public DWGOperator DWG;
 
         public CustomDataManager()
         {
-            localAppDataPath = Environment.GetEnvironmentVariable("LOCALAPPDATA", EnvironmentVariableTarget.Process);
-
-            string fullSettingsFilePath = localAppDataPath + "\\" + settingsFileName;
+            string fullSettingsFilePath = GetApplicationPath() + settingsFileName;
 
             if (!File.Exists(fullSettingsFilePath))
             {
@@ -36,80 +42,15 @@ namespace ACAD_CustomDataManager
             settings = DeserializeSettings(fullSettingsFilePath);
 
             XMan = new XRecordManager(settings.companyName, settings.commonStorageName, settings.recordsPrefix);
+
+            Local = new LocalOperator();
+
+            Public = new PublicOperator();
+
+            DWG = new DWGOperator();
         }
 
-        /// <summary>
-        /// Search XRecord by name and returns the first his string value
-        /// </summary>
-        /// <param parameterName="parameterName"></param>
-        /// <returns></returns>
-        public string DWGGetStringValue(string parameterName)
-        {
-            Document doc = Application.DocumentManager.MdiActiveDocument;
 
-            List<TypedValue> vals = XMan.GetXRecord(doc, parameterName);
-
-            doc.Dispose();
-
-            foreach (TypedValue tv in vals)
-            {
-                string result = (string)tv.Value;
-
-                if (result != null && result != "") return tv.Value as string;
-            }
-
-            return null;
-        }
-
-        public string LocalGetStringValue(string parameterName)
-        {
-            string[] files = Directory.GetFiles(localAppDataPath, "*" + settings.localStorageFileExtention);
-
-            foreach (string filePath in files)
-            {
-                string filename = Path.GetFileNameWithoutExtension(filePath);
-
-                if (filename == parameterName)
-                {
-                    try
-                    {
-                        string result = File.ReadAllText(filePath, Encoding.GetEncoding("windows-1251"));
-
-                        return result;
-                    }
-                    catch
-                    {
-                        return null;
-                    }
-                }
-            }
-            return null;
-        }
-
-        public string PublicGetStringValue(string parameterName)
-        {
-            string[] files = Directory.GetFiles(settings.publicStoragePath, "*" + settings.publicStorageFileExtention);
-
-            foreach (string filePath in files)
-            {
-                string filename = Path.GetFileNameWithoutExtension(filePath);
-
-                if (filename == parameterName)
-                {
-                    try
-                    {
-                        string result = File.ReadAllText(filePath, Encoding.GetEncoding("windows-1251"));
-
-                        return result;
-                    }
-                    catch
-                    {
-                        return null;
-                    }
-                }
-            }
-            return null;
-        }
 
         private static Settings DeserializeSettings(string fileName)
         {
@@ -128,10 +69,21 @@ namespace ACAD_CustomDataManager
             }
             catch
             {
-                return result;
+                return null;
             }
         }
+
+        public static string GetApplicationPath()
+        {
+            string localAppDataPath = Environment.GetEnvironmentVariable("LOCALAPPDATA", EnvironmentVariableTarget.Process);
+
+            string fullSettingsFilePath = localAppDataPath + "\\" + companyName + "\\" + applicationName + "\\";
+
+            return fullSettingsFilePath;
+        }
     }
+
+
 
     public class Settings
     {
