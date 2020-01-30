@@ -6,8 +6,14 @@ using System.Text;
 
 namespace ACAD_CustomDataManager
 {
+    /// <summary>
+    /// Operates with public data
+    /// </summary>
     public class PublicOperator : DataOperator
     {
+        /// <summary>
+        /// Constructor of class
+        /// </summary>
         public PublicOperator()
         {
             storagePath = CustomDataManager.settings.publicStoragePath;

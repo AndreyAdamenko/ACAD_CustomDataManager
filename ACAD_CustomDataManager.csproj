@@ -21,6 +21,8 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\ACAD_CustomDataManager.xml</DocumentationFile>
+    <RegisterForComInterop>false</RegisterForComInterop>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -29,6 +31,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\ACAD_CustomDataManager.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ACAD_XRecords_Manager">
@@ -57,7 +60,6 @@
   <ItemGroup>
     <Compile Include="CustomDataManager.cs" />
     <Compile Include="DataOperator.cs" />
-    <Compile Include="DataType.cs" />
     <Compile Include="DictionaryItem.cs" />
     <Compile Include="DWGOperator.cs" />
     <Compile Include="LocalOperator.cs" />

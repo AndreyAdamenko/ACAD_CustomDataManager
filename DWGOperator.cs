@@ -8,6 +8,9 @@ using System.Text;
 
 namespace ACAD_CustomDataManager
 {
+    /// <summary>
+    /// Operates with drawing data
+    /// </summary>
     public class DWGOperator : DataOperator
     {
         /// <summary>
@@ -33,6 +36,11 @@ namespace ACAD_CustomDataManager
             return null;
         }
 
+        /// <summary>
+        /// Write string value to drawing database.
+        /// </summary>
+        /// <param name="parameterName"></param>
+        /// <param name="value"></param>
         public new void SetStringValue(string parameterName, string value)
         {
             Document doc = Application.DocumentManager.MdiActiveDocument;

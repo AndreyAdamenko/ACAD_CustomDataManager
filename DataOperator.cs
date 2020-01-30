@@ -11,12 +11,20 @@ using System.Security.Principal;
 
 namespace ACAD_CustomDataManager
 {
+    /// <summary>
+    /// Abstract class for defining operator methods
+    /// </summary>
     public abstract class DataOperator
     {
         internal string storagePath;
 
         internal string fileExtention;
 
+        /// <summary>
+        /// Returns string value
+        /// </summary>
+        /// <param name="parameterName"></param>
+        /// <returns></returns>
         public string GetStringValue(string parameterName)
         {
             string[] files = Directory.GetFiles(storagePath, "*" + fileExtention);
@@ -42,6 +50,12 @@ namespace ACAD_CustomDataManager
             return null;
         }
 
+        /// <summary>
+        /// Write string value to storage
+        /// </summary>
+        /// <param name="parameterName"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public bool SetStringValue(string parameterName, string value)
         {
             try
@@ -67,6 +81,11 @@ namespace ACAD_CustomDataManager
             return true;
         }
 
+        /// <summary>
+        /// Returns string dictionary
+        /// </summary>
+        /// <param name="parameterName"></param>
+        /// <returns></returns>
         public Dictionary<string, List<string>> GetDictionary(string parameterName)
         {
             string[] files = Directory.GetFiles(storagePath, "*" + fileExtention);
@@ -83,12 +102,12 @@ namespace ACAD_CustomDataManager
                         {
                             XmlSerializer serializer = new XmlSerializer(typeof(DictionaryItem[]), new XmlRootAttribute() { ElementName = "Items" });
                             
-                            Dictionary<string, List<string>> orgDict = ((DictionaryItem[])serializer.Deserialize(sr)).ToDictionary(i => i.id, i => i.value);
+                            Dictionary<string, List<string>> orgDict = ((DictionaryItem[])serializer.Deserialize(sr)).ToDictionary(i => i.key, i => i.value);
 
                             return orgDict;
                         }
                     }
-                    catch (Exception ex)
+                    catch
                     {
                         return null;
                     }
@@ -98,7 +117,13 @@ namespace ACAD_CustomDataManager
             return null;
         }
 
-        public bool IsDirectoryWritable(string dirPath, bool throwIfFails = false)
+        /// <summary>
+        /// Is a directory available to create a file.
+        /// </summary>
+        /// <param name="dirPath"></param>
+        /// <param name="throwIfFails"></param>
+        /// <returns></returns>
+        protected bool IsDirectoryWritable(string dirPath, bool throwIfFails = false)
         {
             try
             {
