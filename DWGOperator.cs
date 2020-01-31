@@ -11,20 +11,16 @@ namespace ACAD_CustomDataManager
     /// <summary>
     /// Operates with drawing data
     /// </summary>
-    public class DWGOperator : DataOperator
+    public class DWGOperator
     {
         /// <summary>
         /// Search XRecord by name and returns the first his string value
         /// </summary>
         /// <param parameterName="parameterName"></param>
         /// <returns></returns>
-        public new string GetStringValue(string parameterName)
+        public string GetStringValue(Document doc, string parameterName)
         {
-            Document doc = Application.DocumentManager.MdiActiveDocument;
-
             List<TypedValue> vals = CustomDataManager.XMan.GetXRecord(doc, parameterName);
-
-            doc.Dispose();
 
             foreach (TypedValue tv in vals)
             {
@@ -33,23 +29,28 @@ namespace ACAD_CustomDataManager
                 if (result != null && result != "") return tv.Value as string;
             }
 
+            doc.Dispose();
+
             return null;
         }
 
         /// <summary>
         /// Write string value to drawing database.
         /// </summary>
+        /// <param name="doc">AutoCAD document.</param>
         /// <param name="parameterName"></param>
         /// <param name="value"></param>
-        public new void SetStringValue(string parameterName, string value)
+        public bool SetStringValue(Document doc, string parameterName, string value)
         {
-            Document doc = Application.DocumentManager.MdiActiveDocument;
-
+            if (doc == null) return false;
+            
             TypedValue tVal = new TypedValue((int)DxfCode.Text, value);
 
             CustomDataManager.XMan.AddXRecord(doc, new List<TypedValue>() { tVal }, parameterName);
 
-            doc.Dispose();
+            //doc.Dispose();
+
+            return true;
         }
     }
 }

@@ -34,8 +34,9 @@
     <DocumentationFile>bin\Release\ACAD_CustomDataManager.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ACAD_XRecords_Manager">
-      <HintPath>..\ACAD_XRecords_Manager\bin\Release\ACAD_XRecords_Manager.dll</HintPath>
+    <Reference Include="ACAD_XRecords_Manager, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ACAD_XRecords_Manager\bin\Debug\ACAD_XRecords_Manager.dll</HintPath>
     </Reference>
     <Reference Include="AcCoreMgd">
       <HintPath>..\..\Autodesk_SDK\Autodesk_ObjectARX_2014_Win_64_and_32Bit\inc\AcCoreMgd.dll</HintPath>
