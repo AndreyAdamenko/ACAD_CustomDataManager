@@ -22,6 +22,8 @@ namespace ACAD_CustomDataManager
         {
             List<TypedValue> vals = CustomDataManager.XMan.GetXRecord(doc, parameterName);
 
+            if (vals == null) return null;
+
             foreach (TypedValue tv in vals)
             {
                 string result = (string)tv.Value;
