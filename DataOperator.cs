@@ -27,27 +27,18 @@ namespace ACAD_CustomDataManager
         /// <returns></returns>
         public string GetStringValue(string parameterName)
         {
-            string[] files = Directory.GetFiles(storagePath, "*" + fileExtention);
-
-            foreach (string filePath in files)
+            try
             {
-                string filename = Path.GetFileNameWithoutExtension(filePath);
+                string[] files = Directory.GetFiles(storagePath, parameterName + fileExtention);
 
-                if (filename == parameterName)
-                {
-                    try
-                    {
-                        string result = File.ReadAllText(filePath, Encoding.GetEncoding(1251));
+                string result = File.ReadAllText(files[0], Encoding.GetEncoding(1251));
 
-                        return result;
-                    }
-                    catch
-                    {
-                        return null;
-                    }
-                }
+                return result;
             }
-            return null;
+            catch
+            {
+                return null;
+            }
         }
 
         /// <summary>
@@ -101,7 +92,7 @@ namespace ACAD_CustomDataManager
                         using (StreamReader sr = new StreamReader(filePath))
                         {
                             XmlSerializer serializer = new XmlSerializer(typeof(DictionaryItem[]), new XmlRootAttribute() { ElementName = "Items" });
-                            
+
                             Dictionary<string, List<string>> orgDict = ((DictionaryItem[])serializer.Deserialize(sr)).ToDictionary(i => i.key, i => i.value);
 
                             return orgDict;

@@ -26,7 +26,7 @@ namespace ACAD_CustomDataManager
         /// <summary>
         /// Name of settings file
         /// </summary>
-        public static string settingsFileName = "CustomDataManager_settings.xml";
+        public static string settingsFileName = "Settings.xml";
 
 
         /// <summary>
