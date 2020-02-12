@@ -18,7 +18,7 @@ namespace ACAD_CustomDataManager
     {
         internal string storagePath;
 
-        internal string fileExtention;
+        internal string stringParameterFileExtention;
 
         /// <summary>
         /// Returns string value
@@ -29,9 +29,25 @@ namespace ACAD_CustomDataManager
         {
             try
             {
-                string[] files = Directory.GetFiles(storagePath, parameterName + fileExtention);
+                string fileName = GetFile(parameterName + stringParameterFileExtention);
 
-                string result = File.ReadAllText(files[0], Encoding.GetEncoding(1251));
+                string result = File.ReadAllText(fileName, Encoding.GetEncoding(1251));
+
+                return result;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        protected string GetFile(string fileNameWithExtension)
+        {
+            try
+            {
+                string[] files = Directory.GetFiles(storagePath, fileNameWithExtension);
+
+                string result = files[0];
 
                 return result;
             }
@@ -55,7 +71,7 @@ namespace ACAD_CustomDataManager
 
                 if (!IsDirectoryWritable(directoryPath)) return false;
 
-                string fullFilePath = storagePath + "\\" + parameterName + fileExtention;
+                string fullFilePath = storagePath + "\\" + parameterName + stringParameterFileExtention;
 
                 if (File.Exists(fullFilePath))
                 {
@@ -79,7 +95,7 @@ namespace ACAD_CustomDataManager
         /// <returns></returns>
         public Dictionary<string, List<string>> GetDictionary(string parameterName)
         {
-            string[] files = Directory.GetFiles(storagePath, "*" + fileExtention);
+            string[] files = Directory.GetFiles(storagePath, "*" + stringParameterFileExtention);
 
             foreach (string filePath in files)
             {

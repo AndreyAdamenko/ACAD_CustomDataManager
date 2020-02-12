@@ -19,7 +19,7 @@ namespace ACAD_CustomDataManager
         {
             storagePath = CustomDataManager.GetApplicationPath();
 
-            fileExtention = CustomDataManager.settings.localStorageFileExtention;
+            stringParameterFileExtention = CustomDataManager.settings.localStorageFileExtention;
         }
     }
 }
