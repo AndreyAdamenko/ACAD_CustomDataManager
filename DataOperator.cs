@@ -41,6 +41,11 @@ namespace ACAD_CustomDataManager
             }
         }
 
+        /// <summary>
+        /// Returns the path to file in public storage
+        /// </summary>
+        /// <param name="fileNameWithExtension"></param>
+        /// <returns></returns>
         protected string GetFile(string fileNameWithExtension)
         {
             try

@@ -42,9 +42,9 @@ namespace ACAD_CustomDataManager
                 }
             }
 
-            files.Add(fileName);
+            files.Add(result);
 
-            SaveFileToCache(fileName);
+            SaveFileToCache(result);
 
             return result;
         }
@@ -58,11 +58,11 @@ namespace ACAD_CustomDataManager
         {
             try
             {
-                string fileName = GetFile(parameterName);
+                string fileName = GetFile(parameterName + stringParameterFileExtention);
 
                 if (fileName == null)
                 {
-                    fileName = GetCacheFile(parameterName);
+                    fileName = GetCacheFile(parameterName + stringParameterFileExtention);
 
                     if (fileName == null)
                     {
@@ -80,13 +80,13 @@ namespace ACAD_CustomDataManager
             }
         }
 
-        private string GetCacheFile(string parameterName)
+        private string GetCacheFile(string fileName)
         {
-            string fileName = CustomDataManager.GetApplicationPath() + "Cache\\" + parameterName + stringParameterFileExtention;
+            string fullFileName = CustomDataManager.GetApplicationPath() + "Cache\\" + fileName;
 
-            if (!File.Exists(fileName)) return null;
+            if (!File.Exists(fullFileName)) return null;
 
-            return fileName;
+            return fullFileName;
         }
 
         /// <summary>
@@ -110,11 +110,18 @@ namespace ACAD_CustomDataManager
             {
                 string cacheFileName = Path.GetFileName(fileName);
 
-                string newFile = CustomDataManager.GetApplicationPath() + cacheFileName;
+                string cacheFolder = CustomDataManager.GetApplicationPath() + "Cache\\";
+
+                string newFile = cacheFolder + cacheFileName;
+
+                if (!File.Exists(cacheFolder)) Directory.CreateDirectory(cacheFolder);
 
                 File.Copy(fileName, newFile, true);
             }
-            catch { }
+            catch (Exception ex)
+            { 
+
+            }
         }
     }
 }

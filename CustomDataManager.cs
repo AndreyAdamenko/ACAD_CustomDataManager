@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Xml.Serialization;
+using ACAD_CustomDataManager.Exceptions;
 using ACAD_XRecord_Manager;
 using Autodesk.AutoCAD.ApplicationServices;
 using Autodesk.AutoCAD.DatabaseServices;
@@ -15,7 +17,7 @@ namespace ACAD_CustomDataManager
     /// </summary>
     public class CustomDataManager
     {
-        const string companyName = "KITNG";
+        const string companyName = "KITNG_Dev";
 
         const string applicationName = "CustomDataManager";
 
@@ -26,7 +28,7 @@ namespace ACAD_CustomDataManager
         /// <summary>
         /// Name of settings file
         /// </summary>
-        public static string settingsFileName = "Settings.xml";
+        public static string settingsFileName = "CustomDataManager_Settings.xml";
 
 
         /// <summary>
@@ -49,14 +51,14 @@ namespace ACAD_CustomDataManager
         /// </summary>
         public CustomDataManager()
         {
-            string fullSettingsFilePath = GetApplicationPath() + settingsFileName;
+            string settingsPath = GetSettingsPath();
 
-            if (!File.Exists(fullSettingsFilePath))
+            if (settingsPath == null)
             {
-                throw new Exception("File \"" + fullSettingsFilePath + "\" is not exists!");
+                throw new SettingsNullException("File \"" + settingsFileName + "\" is not exists!");
             }
 
-            settings = DeserializeSettings(fullSettingsFilePath);
+            settings = DeserializeSettings(settingsPath);
 
             XMan = new XRecordManager(settings.companyName, settings.commonStorageName, settings.recordsPrefix);
 
@@ -73,7 +75,7 @@ namespace ACAD_CustomDataManager
 
             try
             {
-                using (FileStream fs = new FileStream(fileName, FileMode.OpenOrCreate))
+                using (FileStream fs = new FileStream(fileName, FileMode.Open))
                 {
                     XmlSerializer formatter = new XmlSerializer(typeof(Settings));
 
@@ -97,6 +99,35 @@ namespace ACAD_CustomDataManager
             string localAppDataPath = Environment.GetEnvironmentVariable("LOCALAPPDATA", EnvironmentVariableTarget.Process);
 
             string fullSettingsFilePath = localAppDataPath + "\\" + companyName + "\\" + applicationName + "\\";
+
+            return fullSettingsFilePath;
+        }
+
+        private string GetSettingsPath()
+        {
+            string assemblyFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+
+            string fullSettingsFilePath = assemblyFolder + "\\" + settingsFileName;
+
+            if (!File.Exists(fullSettingsFilePath))
+            {
+                fullSettingsFilePath = GetApplicationPath() + "Cache\\" + settingsFileName;
+
+                if (!File.Exists(fullSettingsFilePath))
+                {
+                    return null;
+                }
+            }
+            else
+            {
+                string cacheFolder = CustomDataManager.GetApplicationPath() + "Cache\\";
+
+                if (!File.Exists(cacheFolder)) Directory.CreateDirectory(cacheFolder);
+
+                string newFile = cacheFolder + settingsFileName;
+
+                File.Copy(fullSettingsFilePath, newFile, true);
+            }
 
             return fullSettingsFilePath;
         }

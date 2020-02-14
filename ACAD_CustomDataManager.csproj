@@ -63,6 +63,7 @@
     <Compile Include="DataOperator.cs" />
     <Compile Include="DictionaryItem.cs" />
     <Compile Include="DWGOperator.cs" />
+    <Compile Include="Exceptions\SettingsNullException.cs" />
     <Compile Include="FileNamesList.cs" />
     <Compile Include="LocalOperator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
